@@ -1,19 +1,34 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import CustomUser
-from .serializers import UserSerializer, MyTokenObtainPairSerializer
+from .serializers import (
+    AdminUserSerializer,
+    StudentUserSerializer,
+    MyTokenObtainPairSerializer,
+)
 
 
-class UserViewSet(ModelViewSet):
-    queryset = CustomUser.objects.all().order_by("-id")
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
-    http_method_names = ["get", "post", "put", "patch", "delete"]
+class UserRegisterViewSet(ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = StudentUserSerializer
+    permission_classes = [AllowAny]  # não precisa estar autenticado para registrar
+    http_method_names = ["post"]
 
-    # Retorna o usuário autenticado
+
+class UserProfileViewSet(ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = StudentUserSerializer
+    permission_classes = [IsAuthenticated]  # precisa estar autenticado para acessar
+    http_method_names = ["get", "put", "patch", "delete"]
+
     def get_object(self):
         return self.request.user
+
+
+class AdminViewSet(ModelViewSet):
+    queryset = CustomUser.objects.filter(isAdmin=False)
+    serializer_class = AdminUserSerializer
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
