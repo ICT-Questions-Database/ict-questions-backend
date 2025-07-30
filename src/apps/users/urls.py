@@ -6,8 +6,11 @@ urlpatterns = [
     # JWT
     path("token/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    # Users
+
+    # Registro
     path("register/", UserRegisterViewSet.as_view({"post": "create"})),
+
+    # Perfil
     path(
         "me/",
         UserProfileViewSet.as_view(
@@ -19,4 +22,7 @@ urlpatterns = [
             }
         ),
     ),
+
+    # Mudança de senha
+    path("me/change_password/", UserProfileViewSet.as_view({"post": "change_password"})),
 ]
