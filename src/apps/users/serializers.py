@@ -33,17 +33,7 @@ class StudentUserSerializer(BaseUserSerializer):
             "first_name",
             "last_name",
             "email",
-            "enrollment",
-            "formation",
         ]
-
-
-# Serializer para admins
-class AdminUserSerializer(BaseUserSerializer):
-    class Meta:
-        model = CustomUser
-        fields = "__all__"
-        read_only_fields = ["id"]
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

@@ -1,13 +1,8 @@
-from django.db.models import CharField, BooleanField, DateTimeField, EmailField
+from django.db.models import DateTimeField, EmailField
 from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
-    enrollment = CharField(max_length=50, unique=True)
-    formation = CharField(max_length=100)
-
-    isAdmin = BooleanField(default=False)
-
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
 

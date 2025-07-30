@@ -3,7 +3,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import CustomUser
 from .serializers import (
-    AdminUserSerializer,
     StudentUserSerializer,
     MyTokenObtainPairSerializer,
 )
@@ -24,11 +23,6 @@ class UserProfileViewSet(ModelViewSet):
 
     def get_object(self):
         return self.request.user
-
-
-class AdminViewSet(ModelViewSet):
-    queryset = CustomUser.objects.filter(isAdmin=False)
-    serializer_class = AdminUserSerializer
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
