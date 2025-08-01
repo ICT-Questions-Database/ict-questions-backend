@@ -73,6 +73,27 @@ class UserProfileViewSet(ModelViewSet):
 
         return Response({"detail": "Password updated successfully"})
     
+    def destroy(self, request, *args, **kwargs):
+        user = self.get_object()
+        password = request.data.get("password")
+
+        if not password:
+            return Response(
+                {"detail": "Password is required to delete account."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not user.check_password(password):
+            return Response(
+                {"detail": "Incorrect password."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        user.delete()
+        return Response(
+            {"detail": "Account deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
     
 
 class MyTokenObtainPairView(TokenObtainPairView):
