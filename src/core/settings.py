@@ -48,6 +48,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
+    "drf_spectacular",
 ]
 
 LOCAL_APPS = [
@@ -162,9 +163,23 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
+
 
 SIMPLEJWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+}
+
+
+CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL")
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "ICT-Questions Database API",
+    "DESCRIPTION": "API for the ICT-Questions project",
+    "VERSION": "1.0.0",
+    "CONTACT": {
+        "email": CONTACT_EMAIL,
+    },
 }
