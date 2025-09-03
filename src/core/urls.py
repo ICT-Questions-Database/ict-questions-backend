@@ -13,4 +13,5 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger",
     ),
+    path("api/v1/questions/", include("apps.questions.urls"))
 ]
