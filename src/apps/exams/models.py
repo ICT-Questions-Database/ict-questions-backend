@@ -39,7 +39,13 @@ class ExamAttempt(Model):
         self.duration = self.end_date - self.start_date
         self.save()
 
+    class Meta:
+        db_table = "exam_attempts"
+
 
 class ExamQuestion(Model):
     exam_attempt = ForeignKey(ExamAttempt, on_delete=CASCADE)
     question = ForeignKey(Question, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "exam_questions"

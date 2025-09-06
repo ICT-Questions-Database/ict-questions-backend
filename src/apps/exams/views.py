@@ -8,7 +8,7 @@ from .serializers import ExamAttemptSerializer, ExamQuestionSerializer
 class ExamAttemptViewSet(ModelViewSet):
     serializer_class = ExamAttemptSerializer
     permission_classes = [IsAuthenticated]
-    http_method_names = ["get", "post"]
+    http_method_names = ["get", "post", "patch"]
 
     def get_queryset(self):
         # Retorna apenas as tentativas do usuário logado
