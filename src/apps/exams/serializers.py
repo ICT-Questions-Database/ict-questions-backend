@@ -22,7 +22,7 @@ class ExamAttemptSerializer(ModelSerializer):
         read_only_fields = ["start_date", "end_date", "duration", "track_display", "level_display"]
 
 
-class ExamQuestion(ModelSerializer):
+class ExamQuestionSerializer(ModelSerializer):
     class Meta:
         model = ExamQuestion
         fields = "__all__"
