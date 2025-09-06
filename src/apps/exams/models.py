@@ -5,6 +5,7 @@ from django.db.models import (
     CharField,
     TextChoices,
     DateTimeField,
+    DurationField,
     CASCADE,
 )
 from apps.users.models import CustomUser
@@ -23,14 +24,14 @@ class ExamAttempt(Model):
         HCIP = "hcip", "HCIP"
         HCIE = "hcie", "HCIE"
 
-    user_id = ForeignKey(CustomUser, on_delete=CASCADE)
+    user = ForeignKey(CustomUser, on_delete=CASCADE)
     grade = FloatField()
     track = CharField(max_length=50, choices=Track.choices)
     level = CharField(max_length=4, choices=Level.choices)
 
     start_date = DateTimeField(auto_now_add=True)
     end_date = DateTimeField(null=True, blank=True)
-    duration = DateTimeField()
+    duration = DurationField(null=True, blank=True)
 
     def finish(self):
         """Marca a tentativa como finalizada (apos o usuario terminar)"""
@@ -40,5 +41,5 @@ class ExamAttempt(Model):
 
 
 class ExamQuestion(Model):
-    exam_attempt_id = ForeignKey(ExamAttempt, on_delete=CASCADE)
-    question_id = ForeignKey(Question, on_delete=CASCADE)
+    exam_attempt = ForeignKey(ExamAttempt, on_delete=CASCADE)
+    question = ForeignKey(Question, on_delete=CASCADE)
