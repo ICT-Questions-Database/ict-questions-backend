@@ -48,7 +48,6 @@ class UserRegisterViewSet(ModelViewSet):
     ),
 )
 class UserProfileViewSet(ModelViewSet):
-    queryset = CustomUser.objects.all()
     serializer_class = StudentUserSerializer
     permission_classes = [IsAuthenticated]  # precisa estar autenticado para acessar
     http_method_names = ["get", "post", "put", "patch", "delete"]
