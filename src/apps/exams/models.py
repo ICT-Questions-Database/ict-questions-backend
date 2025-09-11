@@ -10,7 +10,6 @@ from django.db.models import (
 )
 from apps.users.models import CustomUser
 from apps.questions.models import Question
-from django.utils import timezone
 
 
 class ExamAttempt(Model):
@@ -32,12 +31,6 @@ class ExamAttempt(Model):
     start_date = DateTimeField(auto_now_add=True)
     end_date = DateTimeField(null=True, blank=True)
     duration = DurationField(null=True, blank=True)
-
-    def finish(self):
-        """Marca a tentativa como finalizada (apos o usuario terminar)"""
-        self.end_date = timezone.now()
-        self.duration = self.end_date - self.start_date
-        self.save()
 
     class Meta:
         db_table = "exam_attempts"

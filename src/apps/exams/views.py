@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import ExamAttempt, ExamQuestion
 from .serializers import ExamAttemptSerializer, ExamQuestionSerializer
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from .services import finish_exam_attempt
 
 
 @extend_schema_view(
@@ -53,17 +54,10 @@ class ExamAttemptViewSet(ModelViewSet):
     
     @action(detail=True, methods=["patch"])
     def finish_exam(self, request, pk=None):
-        """
-        Marca o exame como finalizado, calcula end_date e duration, e atualiza a nota
-        """
         attempt = self.get_object()
+        grade = request.data.get("grade")
 
-        # Atualiza a nota 
-        attempt.grade = request.data.get("grade", attempt.grade)
-
-        # Marca fim e calcula duração
-        attempt.finish()
-
+        attempt = finish_exam_attempt(attempt, grade)
         serializer = self.get_serializer(attempt)
         return Response(serializer.data)
 
