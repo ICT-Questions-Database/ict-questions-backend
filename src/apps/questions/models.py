@@ -28,10 +28,10 @@ class Question(Model):
     reviewed_by = ForeignKey(CustomUser, on_delete=SET_NULL, null=True, related_name="reviewer")
 
     text = TextField()
-    level = CharField(max_length=4)
+    level = CharField(max_length=4, choices=Level.choices)
     has_answer = BooleanField()
     has_multiple_answers = BooleanField()
-    track = CharField(max_length=16)
+    track = CharField(max_length=16, choices=Track.choices)
     weight = DecimalField(max_digits=6, decimal_places=2)
 
     approved_at = DateTimeField(auto_now_add=True)

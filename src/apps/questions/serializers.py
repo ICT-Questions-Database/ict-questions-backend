@@ -6,6 +6,7 @@ class QuestionSerializer(ModelSerializer):
     class Meta:
         model = Question
         fields = [
+            "id",
             "submitted_by",
             "reviewed_by",
             "text",
