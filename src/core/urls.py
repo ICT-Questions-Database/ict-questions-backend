@@ -8,6 +8,7 @@ urlpatterns = [
     path("api/v1/users/", include("apps.users.urls")),
     path("api/v1/questions/", include("apps.questions.urls")),
     path("api/v1/exams/", include("apps.exams.urls")),
+    path("api/v1/submissions/", include("apps.submissions.urls")),
     # Swagger
     path("api/v1/swagger/schema", SpectacularAPIView.as_view(), name="schema"),
     path(
