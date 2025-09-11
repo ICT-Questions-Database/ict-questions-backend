@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from apps.questions.serializers import QuestionSerializer
 from .models import Question
+from .pagination import QuestionsPagination
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -33,6 +34,7 @@ class QuestionViewSet(ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = QuestionsPagination
     http_method_names = ["get", "post", "put", "delete", "patch"]
 
     def get_permissions(self):
