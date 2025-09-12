@@ -7,7 +7,9 @@ from django.db.models import (
     FloatField,
     DateTimeField,
     TextChoices,
+    URLField,
     SET_NULL,
+    CASCADE
 )
 from apps.users.models import CustomUser
 
@@ -35,7 +37,7 @@ class QuestionSubmission(Model):
     level = CharField(max_length=4, choices=Level.choices)
     status = CharField(choices=Status.choices)
     weight = FloatField()
-    feedback = FloatField()
+    feedback = TextField()
     has_answer = BooleanField(default=False)
     has_multiple_answers = BooleanField(default=False)
 
@@ -44,3 +46,10 @@ class QuestionSubmission(Model):
 
     class Meta:
         db_table = "question_submissions"
+
+class CorrectSubmissionAnswersSources(Model):
+    question_submission = ForeignKey(QuestionSubmission, on_delete=CASCADE)
+    source = URLField(max_length=200)
+
+    class Meta:
+        db_table = "correct_submission_answer_sources"
