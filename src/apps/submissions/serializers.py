@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import QuestionSubmission
+from .models import QuestionSubmission, CorrectSubmissionAnswersSources
 
 class QuestionSubmissionSerializer(ModelSerializer):
     class Meta:
@@ -25,3 +25,9 @@ class QuestionSubmissionSerializer(ModelSerializer):
             "sent_at",
             "reviewed_at",
         ]
+
+
+class CorrectSubmissionAnswersSourcesSerializer(ModelSerializer):
+    class Meta:
+        model = CorrectSubmissionAnswersSources
+        fields = "__all__"
