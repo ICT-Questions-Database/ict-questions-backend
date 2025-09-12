@@ -3,11 +3,11 @@ from django.db.models import (
     ForeignKey,
     CharField,
     TextField,
+    URLField,
     BooleanField,
     FloatField,
     DateTimeField,
     TextChoices,
-    URLField,
     SET_NULL,
     CASCADE
 )
@@ -47,8 +47,17 @@ class QuestionSubmission(Model):
     class Meta:
         db_table = "question_submissions"
 
-class CorrectSubmissionAnswersSources(Model):
+
+class AlternativeSubmission(Model):
     question_submission = ForeignKey(QuestionSubmission, on_delete=CASCADE)
+    text = TextField()
+    is_correct = BooleanField()
+
+    class Meta:
+        db_table = "alternative_submissions"
+
+class CorrectSubmissionAnswersSources(Model):
+    alternative_submission = ForeignKey(AlternativeSubmission, on_delete=CASCADE)
     source = URLField(max_length=200)
 
     class Meta:
