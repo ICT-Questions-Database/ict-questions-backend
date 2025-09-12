@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import QuestionSubmissionViewset
+from .views import QuestionSubmissionViewset, CorrectSubmissionAnswersSourcesViewSet
 
 urlpatterns = [
     path(
@@ -23,6 +23,24 @@ urlpatterns = [
             {
                 "patch": "review",
             }
-        )
+        ),
+    ),
+    path(
+        "correct_submission_answers_sources/",
+        CorrectSubmissionAnswersSourcesViewSet.as_view(
+            {
+                "get": "list",
+                "post": "create",
+            }
+        ),
+    ),
+    path(
+        "correct_submission_answers_sources/<int:pk>/",
+        CorrectSubmissionAnswersSourcesViewSet.as_view(
+            {
+                "put": "update",
+                "delete": "destroy",
+            }
+        ),
     ),
 ]
