@@ -1,5 +1,10 @@
 from rest_framework.serializers import ModelSerializer
-from .models import QuestionSubmission, CorrectSubmissionAnswersSources
+from .models import (
+    QuestionSubmission,
+    CorrectSubmissionAnswersSources,
+    AlternativeSubmission,
+)
+
 
 class QuestionSubmissionSerializer(ModelSerializer):
     class Meta:
@@ -30,4 +35,10 @@ class QuestionSubmissionSerializer(ModelSerializer):
 class CorrectSubmissionAnswersSourcesSerializer(ModelSerializer):
     class Meta:
         model = CorrectSubmissionAnswersSources
+        fields = "__all__"
+
+
+class AlternativeSubmissionSerializer(ModelSerializer):
+    class Meta:
+        model = AlternativeSubmission
         fields = "__all__"
