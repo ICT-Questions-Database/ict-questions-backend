@@ -16,7 +16,7 @@ class QuestionSubmissionPermission(BasePermission):
         return obj.submitted_by == request.user
 
 
-class CorrectSubmissionAnswersSourcesPermission(BasePermission):
+class BaseSubmissionPermission(BasePermission):
     """
     Permite admins ou o dono da QuestionSubmission
     acessar/editar fontes de resposta.
