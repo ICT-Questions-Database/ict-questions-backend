@@ -6,12 +6,13 @@ from .models import QuestionSubmission
 from .serializers import (
     QuestionSubmissionSerializer,
     CorrectSubmissionAnswersSourcesSerializer,
+    AlternativeSubmissionSerializer,
 )
 from .permissions import (
     QuestionSubmissionPermission,
-    CorrectSubmissionAnswersSourcesPermission,
+    BaseSubmissionPermission,
 )
-from .services import review_submission, get_sources_for_user
+from .services import review_submission, get_sources_for_user, get_alternatives_for_questions_by_user
 from .pagination import SubmissionPagination
 from drf_spectacular.utils import extend_schema, extend_schema_view
 
@@ -55,8 +56,8 @@ class QuestionSubmissionViewset(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.is_staff:
-            return QuestionSubmission.objects.all()
-        return QuestionSubmission.objects.filter(submitted_by=user)
+            return QuestionSubmission.objects.all().order_by("id")
+        return QuestionSubmission.objects.filter(submitted_by=user).order_by("id")
 
     def perform_create(self, serializer):
         serializer.save(submitted_by=self.request.user)
@@ -80,7 +81,7 @@ class QuestionSubmissionViewset(ModelViewSet):
 
 class CorrectSubmissionAnswersSourcesViewSet(ModelViewSet):
     serializer_class = CorrectSubmissionAnswersSourcesSerializer
-    permission_classes = [IsAuthenticated, CorrectSubmissionAnswersSourcesPermission]
+    permission_classes = [IsAuthenticated, BaseSubmissionPermission]
     pagination_class = SubmissionPagination
     http_method_names = ["get", "post", "put", "delete"]
 
@@ -89,3 +90,17 @@ class CorrectSubmissionAnswersSourcesViewSet(ModelViewSet):
         return get_sources_for_user(
             self.request.user, question_submission_id=question_id
         )
+
+
+class AlternativeSubmissionViewSet(ModelViewSet):
+    serializer_class = AlternativeSubmissionSerializer
+    permission_classes = [IsAuthenticated, BaseSubmissionPermission]
+    pagination_class = SubmissionPagination
+    http_method_names = ["get", "post", "put", "patch", "delete"]
+
+    def get_queryset(self):
+        question_id = self.request.query_params.get("question_submission_id")
+        return get_alternatives_for_questions_by_user(
+            self.request.user, question_submission_id=question_id
+        )
+    
