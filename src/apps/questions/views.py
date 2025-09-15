@@ -36,18 +36,14 @@ from drf_spectacular.utils import extend_schema_view, extend_schema
     ),
 )
 class QuestionViewSet(ModelViewSet):
-    queryset = Question.objects.all()
+    queryset = Question.objects.all().order_by("id")
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = QuestionsPagination
     http_method_names = ["get", "post", "put", "delete", "patch"]
 
     def get_permissions(self):
-        if self.action in ("post", "destroy", "put", "patch"):
-            permission_classes = [IsAuthenticated, IsAdminUser]
-        else:
-            permission_classes = [IsAuthenticated]
-        
+        permission_classes = [IsAuthenticated, IsAdminUser] if self.action in ("create", "destroy", "update", "partial_update") else [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
@@ -100,9 +96,8 @@ class AlternativeViewSet(ModelViewSet):
         return queryset
     
     def get_permissions(self):
-        if self.action in ("create", "update", "partial_update", "destroy"):
-            return [IsAuthenticated, IsAdminUser]
-        return [IsAuthenticated]
+        permission_classes = [IsAuthenticated, IsAdminUser] if self.action in ("create", "destroy", "update", "partial_update") else [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
 @extend_schema_view(
     list=extend_schema(
