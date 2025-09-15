@@ -67,6 +67,9 @@ class UserProfileViewSet(ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        if not user.check_password(current_password):
+            return Response({"detail": "Current password is wrong"}, status=status.HTTP_400_BAD_REQUEST)
+
         user.set_password(new_password)
         user.save()
 
