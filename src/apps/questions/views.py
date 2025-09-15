@@ -93,15 +93,16 @@ class AlternativeViewSet(ModelViewSet):
 
     def get_queryset(self):
         question_id = self.request.query_params.get("question_id")
+        queryset = Alternative.objects.all()
 
-        if user.is_staff:
-            if question_id:
-                return Alternative.objects.filter(question=question_id)
-
-        user = self.request.user
-
-        return Alternative.objects.filter(question=question_id, question__submitted_by=user)
-
+        if question_id:
+            queryset = queryset.filter(question=question_id)
+        return queryset
+    
+    def get_permissions(self):
+        if self.action in ("create", "update", "partial_update", "destroy"):
+            return [IsAuthenticated, IsAdminUser]
+        return [IsAuthenticated]
 
 @extend_schema_view(
     list=extend_schema(
@@ -136,7 +137,7 @@ class AlternativeViewSet(ModelViewSet):
     ),
 )
 class CorrectAnswersSourcesViewSet(ModelViewSet):
-    serializer_class = CorrectAnswersSources
+    serializer_class = CorrectAnswersSourcesSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "put", "delete", "patch"]
 
