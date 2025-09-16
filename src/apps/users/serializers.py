@@ -1,30 +1,10 @@
-from rest_framework.serializers import ModelSerializer, EmailField, ValidationError
+from rest_framework.serializers import ModelSerializer, Serializer, EmailField, CharField, ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from .models import CustomUser
 
 
-# class BaseUserSerializer(ModelSerializer):
-#     def create(self, validated_data):
-#         password = validated_data.pop("password", None)
-#         user = self.Meta.model(**validated_data)
-#         if password:
-#             user.set_password(password)
-#         user.save()
-#         return user
-
-#     def update(self, instance, validated_data):
-#         password = validated_data.pop("password", None)
-#         for attr, value in validated_data.items():
-#             setattr(instance, attr, value)
-#         if password:
-#             instance.set_password(password)
-#         instance.save()
-#         return instance
-
-
-# Serializer para estudantes (para não retornar todos os dados)
-class StudentUserSerializer(ModelSerializer):
+class UserSerializer(ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
@@ -52,6 +32,11 @@ class StudentUserSerializer(ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+
+class ChangePasswordSerializer(Serializer):
+    current_password = CharField(write_only=True, required=True)
+    new_password = CharField(write_only=True, required=True)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
