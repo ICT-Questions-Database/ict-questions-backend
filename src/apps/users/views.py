@@ -11,7 +11,7 @@ from .serializers import (
     ChangePasswordSerializer,
     MyTokenObtainPairSerializer,
 )
-from .services import delete_user_account
+from .services import delete_user_account, change_user_password
 from .exceptions import MissingPasswordError, InvalidPasswordError
 
 
@@ -24,7 +24,7 @@ from .exceptions import MissingPasswordError, InvalidPasswordError
 class UserRegisterViewSet(ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]  # não precisa estar autenticado para registrar
+    permission_classes = [AllowAny]
     http_method_names = ["post"]
 
 
@@ -48,7 +48,7 @@ class UserRegisterViewSet(ModelViewSet):
 )
 class UserProfileViewSet(ModelViewSet):
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated] 
+    permission_classes = [IsAuthenticated]
     http_method_names = ["get", "put", "patch", "delete"]
 
     def get_object(self):
@@ -76,7 +76,17 @@ class UserProfileViewSet(ModelViewSet):
             )
 
 
+@extend_schema_view(
+    change_password=extend_schema(
+        summary="Changes user password",
+        description="Changes authenticated user password.",
+    ),
+)
 class UserActionsViewSet(ModelViewSet):
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [IsAuthenticated]
+    http_method_names = ["post"]
+
     @action(
         detail=False,
         methods=["post"],
@@ -84,26 +94,26 @@ class UserActionsViewSet(ModelViewSet):
         serializer_class=ChangePasswordSerializer,
     )
     def change_password(self, request):
-        user = self.get_object()
+        user = request.user
         current_password = request.data.get("current_password")
         new_password = request.data.get("new_password")
 
-        if not current_password or not new_password:
+        try:
+            change_user_password(user, current_password, new_password)
             return Response(
-                {"detail": "Both current_password and new_password are required"},
+                {"detail": "Password changed successfully."},
+                status=status.HTTP_200_OK,
+            )
+        except MissingPasswordError as e:
+            return Response(
+                {"detail": str(e)},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-        if not user.check_password(current_password):
+        except InvalidPasswordError as e:
             return Response(
-                {"detail": "Current password is wrong"},
-                status=status.HTTP_400_BAD_REQUEST,
+                {"detail": str(e)},
+                status=status.HTTP_403_FORBIDDEN,
             )
-
-        user.set_password(new_password)
-        user.save()
-
-        return Response({"detail": "Password updated successfully"})
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
