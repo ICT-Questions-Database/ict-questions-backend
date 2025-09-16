@@ -7,9 +7,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from .models import CustomUser
 from .serializers import (
-    StudentUserSerializer,
+    UserSerializer,
+    ChangePasswordSerializer,
     MyTokenObtainPairSerializer,
 )
+from .services import delete_user_account
+from .exceptions import MissingPasswordError, InvalidPasswordError
 
 
 @extend_schema_view(
@@ -20,16 +23,12 @@ from .serializers import (
 )
 class UserRegisterViewSet(ModelViewSet):
     queryset = CustomUser.objects.all()
-    serializer_class = StudentUserSerializer
+    serializer_class = UserSerializer
     permission_classes = [AllowAny]  # não precisa estar autenticado para registrar
     http_method_names = ["post"]
 
 
 @extend_schema_view(
-    change_password=extend_schema(
-        summary="Changes user password",
-        description="Changes a user object password.",
-    ),
     retrieve=extend_schema(
         summary="Retrieve a user's personal information",
         description="Returns a user's personal information.",
@@ -48,14 +47,42 @@ class UserRegisterViewSet(ModelViewSet):
     ),
 )
 class UserProfileViewSet(ModelViewSet):
-    serializer_class = StudentUserSerializer
-    permission_classes = [IsAuthenticated]  # precisa estar autenticado para acessar
-    http_method_names = ["get", "post", "put", "patch", "delete"]
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated] 
+    http_method_names = ["get", "put", "patch", "delete"]
 
     def get_object(self):
         return self.request.user
 
-    @action(detail=False, methods=["post"], permission_classes=[IsAuthenticated])
+    def destroy(self, request, *args, **kwargs):
+        user = self.get_object()
+        password = request.data.get("password")
+
+        try:
+            delete_user_account(user=user, password=password)
+            return Response(
+                {"detail": "Account deleted successfully"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        except MissingPasswordError as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except InvalidPasswordError as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+
+class UserActionsViewSet(ModelViewSet):
+    @action(
+        detail=False,
+        methods=["post"],
+        permission_classes=[IsAuthenticated],
+        serializer_class=ChangePasswordSerializer,
+    )
     def change_password(self, request):
         user = self.get_object()
         current_password = request.data.get("current_password")
@@ -68,35 +95,16 @@ class UserProfileViewSet(ModelViewSet):
             )
 
         if not user.check_password(current_password):
-            return Response({"detail": "Current password is wrong"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Current password is wrong"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         user.set_password(new_password)
         user.save()
 
         return Response({"detail": "Password updated successfully"})
-    
-    def destroy(self, request, *args, **kwargs):
-        user = self.get_object()
-        password = request.data.get("password")
 
-        if not password:
-            return Response(
-                {"detail": "Password is required to delete account."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if not user.check_password(password):
-            return Response(
-                {"detail": "Incorrect password."},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
-        user.delete()
-        return Response(
-            {"detail": "Account deleted successfully."},
-            status=status.HTTP_204_NO_CONTENT,
-        )
-    
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
