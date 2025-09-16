@@ -85,16 +85,10 @@ class QuestionViewSet(ModelViewSet):
 class AlternativeViewSet(ModelViewSet):
     serializer_class = AlternativeSerializer
     permission_classes = [IsAuthenticated]
-    http_method_names = ["get", "post", "put", "delete", "patch"]
-
-    def get_queryset(self):
-        question_id = self.request.query_params.get("question_id")
-        queryset = Alternative.objects.all()
-
-        if question_id:
-            queryset = queryset.filter(question=question_id)
-        return queryset
-    
+    http_method_names = ["post", "put", "delete", "patch"]
+ 
+    queryset = Alternative.objects.all()
+ 
     def get_permissions(self):
         permission_classes = [IsAuthenticated, IsAdminUser] if self.action in ("create", "destroy", "update", "partial_update") else [IsAuthenticated]
         return [permission() for permission in permission_classes]
