@@ -9,11 +9,11 @@ from .models import CustomUser
 from .serializers import (
     UserSerializer,
     ChangePasswordSerializer,
+    UserAnswersSerializer,
     MyTokenObtainPairSerializer,
 )
-from .services import delete_user_account, change_user_password
+from .services import delete_user_account, change_user_password, get_user_answers_by_exam
 from .exceptions import MissingPasswordError, InvalidPasswordError
-
 
 @extend_schema_view(
     create=extend_schema(
@@ -115,6 +115,19 @@ class UserActionsViewSet(ModelViewSet):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
+
+class UserAnswersViewSet(ModelViewSet):
+    serializer_class = UserAnswersSerializer
+    permission_classes = [IsAuthenticated]
+    http_method_names = ["get", "post"]
+
+    def get_queryset(self):
+        user = self.request.user
+        exam_attempt_id = self.request.query_params.get("exam_attempt")
+
+        queryset = get_user_answers_by_exam(user=user, exam_attempt_id=exam_attempt_id)
+        return queryset
+            
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer

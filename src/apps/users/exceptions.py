@@ -4,3 +4,7 @@ class MissingPasswordError(Exception):
 
 class InvalidPasswordError(Exception):
     pass
+
+
+class MissingExamAttemptError(Exception):
+    pass

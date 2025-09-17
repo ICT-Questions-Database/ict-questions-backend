@@ -1,5 +1,5 @@
-from .models import CustomUser
-from .exceptions import MissingPasswordError, InvalidPasswordError
+from .models import CustomUser, UserAnswers
+from .exceptions import MissingPasswordError, InvalidPasswordError, MissingExamAttemptError
 
 
 def delete_user_account(user: CustomUser, password: str) -> None:
@@ -22,3 +22,15 @@ def change_user_password(user: CustomUser, current_password, new_password: str) 
 
     user.set_password(new_password)
     user.save()
+
+
+def get_user_answers_by_exam(user: CustomUser, exam_attempt_id: str) -> None:
+    if not exam_attempt_id:
+        raise MissingExamAttemptError("No exam_attempt was given.")
+
+    return (
+        UserAnswers.objects
+        .filter(user=user, exam_attempt=exam_attempt_id)
+        .select_related("question", "alternative")
+        .order_by("question_id")
+    )
