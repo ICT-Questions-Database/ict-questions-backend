@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer, Serializer, EmailField, CharField, ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
-from .models import CustomUser
+from .models import CustomUser, UserAnswers
 
 
 class UserSerializer(ModelSerializer):
@@ -37,6 +37,12 @@ class UserSerializer(ModelSerializer):
 class ChangePasswordSerializer(Serializer):
     current_password = CharField(write_only=True, required=True)
     new_password = CharField(write_only=True, required=True)
+
+
+class UserAnswersSerializer(ModelSerializer):
+    class Meta:
+        model = UserAnswers
+        fields = "__all__"
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
