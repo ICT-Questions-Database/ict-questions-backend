@@ -131,15 +131,11 @@ class CorrectAnswersSourcesViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete", "patch"]
 
     def get_queryset(self):
-        user = self.request.user
-        queryset = CorrectAnswersSources.objects.all()
-        
-        if user.is_staff:
-            question_id = self.request.query_params.get("question_id")
+        question_id = self.request.query_params.get("question_id")
+        if question_id:
+            return CorrectAnswersSources.objects.filter(alternative__question_id=question_id)
+        return CorrectAnswersSources.objects.none()
 
-            if question_id:
-                queryset = queryset.filter(question_id=question_id)
-
-            return queryset
-
-        return CorrectAnswersSources.objects.filter(question__submitted_by=user)
+    def get_permissions(self): 
+        permission_classes = [IsAuthenticated, IsAdminUser] if self.action in ("create", "destroy", "update", "partial_update") else [IsAuthenticated]
+        return [permission() for permission in permission_classes]
