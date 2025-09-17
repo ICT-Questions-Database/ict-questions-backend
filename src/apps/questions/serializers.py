@@ -36,6 +36,7 @@ class CorrectAnswersSourcesSerializer(ModelSerializer):
     class Meta:
         model = CorrectAnswersSources
         fields = [
-            "question",
+            "id",
+            "alternative",
             "source"
         ]
