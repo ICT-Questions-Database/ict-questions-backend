@@ -1,4 +1,4 @@
-from apps.users.models import CustomUser
+from django.conf import settings
 
 from django.db.models import (
     Model,
@@ -26,8 +26,8 @@ class Question(Model):
         NETWORK = "Network"
         COMPUTING = "Computing"
 
-    submitted_by = ForeignKey(CustomUser, on_delete=SET_NULL, null=True, related_name="user")
-    reviewed_by = ForeignKey(CustomUser, on_delete=SET_NULL, null=True, related_name="reviewer")
+    submitted_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, related_name="user")
+    reviewed_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, related_name="reviewer")
 
     text = TextField()
     level = CharField(max_length=4, choices=Level.choices)

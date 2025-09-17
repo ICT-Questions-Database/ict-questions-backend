@@ -11,7 +11,7 @@ from django.db.models import (
     SET_NULL,
     CASCADE
 )
-from apps.users.models import CustomUser
+from django.conf import settings
 
 
 class QuestionSubmission(Model):
@@ -30,8 +30,8 @@ class QuestionSubmission(Model):
         APPROVED = "approved", "Approved"
         REJECTED = "rejected", "Rejected"
 
-    submitted_by = ForeignKey(CustomUser, on_delete=SET_NULL, null=True, related_name="submitted_questions")
-    reviewed_by = ForeignKey(CustomUser, on_delete=SET_NULL, blank=True, null=True, related_name="reviewed_questions")
+    submitted_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, related_name="submitted_questions")
+    reviewed_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, blank=True, null=True, related_name="reviewed_questions")
     text = TextField()
     track = CharField(max_length=50, choices=Track.choices)
     level = CharField(max_length=4, choices=Level.choices)
