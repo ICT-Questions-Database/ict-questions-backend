@@ -53,7 +53,7 @@ class Alternative(Model):
 
 
 class CorrectAnswersSources(Model):
-    question = ForeignKey(Alternative, on_delete=CASCADE, related_name="sources")
+    alternative = ForeignKey(Alternative, on_delete=CASCADE, related_name="sources")
     source = URLField()
 
     class Meta:
