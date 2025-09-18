@@ -7,9 +7,11 @@ from django.db.models import (
     DecimalField,
     CharField,
     TextField,
+    URLField,
     TextChoices,
     BooleanField,
     SET_NULL,
+    CASCADE,
 )
 
 
@@ -39,3 +41,20 @@ class Question(Model):
 
     class Meta:
         db_table = "questions"
+
+
+class Alternative(Model):
+    question = ForeignKey(Question, on_delete=CASCADE, related_name="alternatives")
+    text = TextField()
+    is_correct = BooleanField()
+
+    class Meta:
+        db_table = "alternatives"
+
+
+class CorrectAnswersSources(Model):
+    alternative = ForeignKey(Alternative, on_delete=CASCADE, related_name="sources")
+    source = URLField()
+
+    class Meta:
+        db_table = "correct_answers_sources"
