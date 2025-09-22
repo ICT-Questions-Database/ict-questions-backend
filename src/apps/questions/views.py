@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from apps.questions.serializers import QuestionSerializer, AlternativeSerializer, CorrectAnswersSourcesSerializer
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Question, Alternative, CorrectAnswersSources
 from .pagination import QuestionsPagination
 from .permissions import IsAdminOrReadOnly
+from .filters import QuestionFilter
 
 from .schema import question_schema, alternative_schema, correct_answers_sources_schema
 from rest_framework.viewsets import ModelViewSet
@@ -16,6 +18,8 @@ class QuestionViewSet(ModelViewSet):
     serializer_class = QuestionSerializer
     permission_classes = [IsAdminOrReadOnly]
     pagination_class = QuestionsPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = QuestionFilter
     http_method_names = ["get", "post", "put", "delete", "patch"]
 
     def perform_create(self, serializer):
