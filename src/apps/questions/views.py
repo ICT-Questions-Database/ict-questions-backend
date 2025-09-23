@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from apps.questions.serializers import QuestionSerializer, AlternativeSerializer, CorrectAnswersSourcesSerializer
 from .models import Question, Alternative, CorrectAnswersSources
 from .pagination import QuestionsPagination
@@ -92,6 +91,7 @@ class AlternativeViewSet(ModelViewSet):
     def get_permissions(self):
         permission_classes = [IsAuthenticated, IsAdminUser] if self.action in ("create", "destroy", "update", "partial_update") else [IsAuthenticated]
         return [permission() for permission in permission_classes]
+
 
 @extend_schema_view(
     list=extend_schema(

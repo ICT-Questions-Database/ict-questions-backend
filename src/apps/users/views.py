@@ -12,8 +12,13 @@ from .serializers import (
     UserAnswersSerializer,
     MyTokenObtainPairSerializer,
 )
-from .services import delete_user_account, change_user_password, get_user_answers_by_exam
+from .services import (
+    delete_user_account,
+    change_user_password,
+    get_user_answers_by_exam,
+)
 from .exceptions import MissingPasswordError, InvalidPasswordError
+
 
 @extend_schema_view(
     create=extend_schema(
@@ -116,6 +121,18 @@ class UserActionsViewSet(ModelViewSet):
             )
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="Lists all the answers from the user for the given exam",
+        description="Lists all the answers from the user for the given exam.",
+        tags=["user_answers"],
+    ),
+    create=extend_schema(
+        summary="Creates an user_answer object",
+        description="Creates an user_answer object in the database.",
+        tags=["user_answers"],
+    ),
+)
 class UserAnswersViewSet(ModelViewSet):
     serializer_class = UserAnswersSerializer
     permission_classes = [IsAuthenticated]
@@ -127,7 +144,7 @@ class UserAnswersViewSet(ModelViewSet):
 
         queryset = get_user_answers_by_exam(user=user, exam_attempt_id=exam_attempt_id)
         return queryset
-            
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
