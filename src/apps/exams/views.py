@@ -4,27 +4,11 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import ExamAttempt, ExamQuestion
 from .serializers import ExamAttemptSerializer, ExamQuestionSerializer
-from drf_spectacular.utils import extend_schema, extend_schema_view
+from .services import finish_exam_attempt
+from .schema import exam_attempt_schema, exam_question_schema
 
 
-@extend_schema_view(
-    list=extend_schema(
-        summary="Lists all authenticated user questions",
-        description="Lists all authenticated user questions at once.",
-    ),
-    retrieve=extend_schema(
-        summary="Retrieve a specific question",
-        description="Retrieve a specific question from the authenticated user.",
-    ),
-    start_exam=extend_schema(
-        summary="Creates an exam instance",
-        description="Creates an exam instance to be completed.",
-    ),
-    finish_exam=extend_schema(
-        summary="Updates an exam instance",
-        description="Updates an exam instance filling the incomplete data.",
-    ),
-)
+@exam_attempt_schema
 class ExamAttemptViewSet(ModelViewSet):
     serializer_class = ExamAttemptSerializer
     permission_classes = [IsAuthenticated]
@@ -43,45 +27,22 @@ class ExamAttemptViewSet(ModelViewSet):
         level = request.data.get("level")
 
         attempt = ExamAttempt.objects.create(
-            user=request.user,
-            track=track,
-            level=level,
-            grade=0.0  
+            user=request.user, track=track, level=level, grade=0.0
         )
         serializer = self.get_serializer(attempt)
         return Response(serializer.data)
-    
+
     @action(detail=True, methods=["patch"])
     def finish_exam(self, request, pk=None):
-        """
-        Marca o exame como finalizado, calcula end_date e duration, e atualiza a nota
-        """
         attempt = self.get_object()
+        grade = request.data.get("grade")
 
-        # Atualiza a nota 
-        attempt.grade = request.data.get("grade", attempt.grade)
-
-        # Marca fim e calcula duração
-        attempt.finish()
-
+        attempt = finish_exam_attempt(attempt, grade)
         serializer = self.get_serializer(attempt)
         return Response(serializer.data)
 
 
-@extend_schema_view(
-    list=extend_schema(
-        summary="Lists all authenticated user questions",
-        description="Lists all authenticated user questions at once.",
-    ),
-    retrieve=extend_schema(
-        summary="Retrieve a specific question",
-        description="Retrieve a specific question from the authenticated user.",
-    ),
-    create=extend_schema(
-        summary="Creates an exam_question object",
-        description="Creates an exam_question object."
-    )
-)
+@exam_question_schema
 class ExamQuestionViewSet(ModelViewSet):
     queryset = ExamQuestion.objects.all()
     serializer_class = ExamQuestionSerializer

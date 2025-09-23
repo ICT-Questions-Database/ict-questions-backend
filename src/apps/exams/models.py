@@ -8,9 +8,8 @@ from django.db.models import (
     DurationField,
     CASCADE,
 )
-from apps.users.models import CustomUser
 from apps.questions.models import Question
-from django.utils import timezone
+from django.conf import settings
 
 
 class ExamAttempt(Model):
@@ -24,7 +23,7 @@ class ExamAttempt(Model):
         HCIP = "hcip", "HCIP"
         HCIE = "hcie", "HCIE"
 
-    user = ForeignKey(CustomUser, on_delete=CASCADE)
+    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
     grade = FloatField()
     track = CharField(max_length=50, choices=Track.choices)
     level = CharField(max_length=4, choices=Level.choices)
@@ -32,12 +31,6 @@ class ExamAttempt(Model):
     start_date = DateTimeField(auto_now_add=True)
     end_date = DateTimeField(null=True, blank=True)
     duration = DurationField(null=True, blank=True)
-
-    def finish(self):
-        """Marca a tentativa como finalizada (apos o usuario terminar)"""
-        self.end_date = timezone.now()
-        self.duration = self.end_date - self.start_date
-        self.save()
 
     class Meta:
         db_table = "exam_attempts"

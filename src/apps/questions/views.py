@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from apps.questions.serializers import QuestionSerializer, AlternativeSerializer, CorrectAnswersSourcesSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Question, Alternative, CorrectAnswersSources
@@ -37,6 +36,7 @@ class AlternativeViewSet(ModelViewSet):
     def get_permissions(self):
         permission_classes = [IsAuthenticated, IsAdminUser] if self.action in ("create", "destroy", "update", "partial_update") else [IsAuthenticated]
         return [permission() for permission in permission_classes]
+
 
 @correct_answers_sources_schema
 class CorrectAnswersSourcesViewSet(ModelViewSet):

@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import UserRegisterViewSet, UserProfileViewSet, MyTokenObtainPairView
+from .views import UserRegisterViewSet, UserProfileViewSet, UserActionsViewSet, UserAnswersViewSet, MyTokenObtainPairView
 
 urlpatterns = [
     # JWT
@@ -24,5 +24,8 @@ urlpatterns = [
     ),
 
     # Mudança de senha
-    path("change_password/", UserProfileViewSet.as_view({"post": "change_password"})),
+    path("change_password/", UserActionsViewSet.as_view({"post": "change_password"})),
+    
+    # UserAnswers
+    path("user_answers/", UserAnswersViewSet.as_view({"get": "list", "post": "create"})),
 ]
