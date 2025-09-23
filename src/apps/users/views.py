@@ -4,7 +4,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
-from drf_spectacular.utils import extend_schema_view, extend_schema
 from .models import CustomUser
 from .serializers import (
     UserSerializer,
@@ -18,14 +17,15 @@ from .services import (
     get_user_answers_by_exam,
 )
 from .exceptions import MissingPasswordError, InvalidPasswordError
-
-
-@extend_schema_view(
-    create=extend_schema(
-        summary="Creates a user object",
-        description="Creates a new user object.",
-    ),
+from .schema import (
+    user_register_schema,
+    user_profile_schema,
+    user_actions_schema,
+    user_answers_schema,
 )
+
+
+@user_register_schema
 class UserRegisterViewSet(ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
@@ -33,24 +33,7 @@ class UserRegisterViewSet(ModelViewSet):
     http_method_names = ["post"]
 
 
-@extend_schema_view(
-    retrieve=extend_schema(
-        summary="Retrieve a user's personal information",
-        description="Returns a user's personal information.",
-    ),
-    update=extend_schema(
-        summary="Updates a user personal information",
-        description="Updates a user personal information.",
-    ),
-    partial_update=extend_schema(
-        summary="Partially updates a user personal information",
-        description="Partially updates a user personal information.",
-    ),
-    destroy=extend_schema(
-        summary="Deletes a user",
-        description="Deletes a user.",
-    ),
-)
+@user_profile_schema
 class UserProfileViewSet(ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
@@ -81,12 +64,7 @@ class UserProfileViewSet(ModelViewSet):
             )
 
 
-@extend_schema_view(
-    change_password=extend_schema(
-        summary="Changes user password",
-        description="Changes authenticated user password.",
-    ),
-)
+@user_actions_schema
 class UserActionsViewSet(ModelViewSet):
     serializer_class = ChangePasswordSerializer
     permission_classes = [IsAuthenticated]
@@ -121,18 +99,7 @@ class UserActionsViewSet(ModelViewSet):
             )
 
 
-@extend_schema_view(
-    list=extend_schema(
-        summary="Lists all the answers from the user for the given exam",
-        description="Lists all the answers from the user for the given exam.",
-        tags=["user_answers"],
-    ),
-    create=extend_schema(
-        summary="Creates an user_answer object",
-        description="Creates an user_answer object in the database.",
-        tags=["user_answers"],
-    ),
-)
+@user_answers_schema
 class UserAnswersViewSet(ModelViewSet):
     serializer_class = UserAnswersSerializer
     permission_classes = [IsAuthenticated]
