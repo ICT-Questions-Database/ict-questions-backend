@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer, Serializer, EmailField, CharField, ValidationError
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from .models import CustomUser, UserAnswers
@@ -15,6 +16,12 @@ class UserSerializer(ModelSerializer):
             "email",
         ]
         extra_kwargs = {"password": {"write_only": True}}
+
+    def validate_email(self, value):
+        user = self.instance
+        if user and CustomUser.objects.exclude(pk=user.pk).filter(email=value).exists():
+            raise ValidationError("Este email já está em uso.")
+        return value
 
     def create(self, validated_data):
         password = validated_data.pop("password", None)
@@ -55,7 +62,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         user = authenticate(username=email, password=password)
 
         if not user:
-            raise ValidationError("No active account found with the given credentials")
+            raise AuthenticationFailed("No active account found with the given credentials")
 
         refresh = self.get_token(user)
 
