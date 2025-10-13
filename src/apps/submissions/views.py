@@ -2,7 +2,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from .models import QuestionSubmission
+from .models import QuestionSubmission, AlternativeSubmission, CorrectSubmissionAnswersSources
 from .serializers import (
     QuestionSubmissionSerializer,
     CorrectSubmissionAnswersSourcesSerializer,
@@ -59,6 +59,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
     ),
 )
 class QuestionSubmissionViewset(ModelViewSet):
+    queryset = QuestionSubmission.objects.none()
     serializer_class = QuestionSubmissionSerializer
     permission_classes = [IsAuthenticated, QuestionSubmissionPermission]
     pagination_class = SubmissionPagination
@@ -118,6 +119,7 @@ class QuestionSubmissionViewset(ModelViewSet):
     ),
 )
 class CorrectSubmissionAnswersSourcesViewSet(ModelViewSet):
+    queryset = CorrectSubmissionAnswersSources.objects.none()
     serializer_class = CorrectSubmissionAnswersSourcesSerializer
     permission_classes = [IsAuthenticated, BaseSubmissionPermission]
     pagination_class = SubmissionPagination
@@ -163,6 +165,7 @@ class CorrectSubmissionAnswersSourcesViewSet(ModelViewSet):
     ),
 )
 class AlternativeSubmissionViewSet(ModelViewSet):
+    queryset = AlternativeSubmission.objects.none()
     serializer_class = AlternativeSubmissionSerializer
     permission_classes = [IsAuthenticated, BaseSubmissionPermission]
     pagination_class = SubmissionPagination

@@ -3,6 +3,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from .models import CustomUser, UserAnswers
+from django.contrib.auth.password_validation import validate_password
+from rest_framework.exceptions import ValidationError as DRFValidationError
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 
 class UserSerializer(ModelSerializer):
@@ -27,6 +30,10 @@ class UserSerializer(ModelSerializer):
         password = validated_data.pop("password", None)
         user = CustomUser(**validated_data)
         if password:
+            try:
+                validate_password(password, user=user)
+            except DjangoValidationError as e:
+                raise DRFValidationError({"password": e.messages})
             user.set_password(password)
         user.save()
         return user

@@ -10,6 +10,7 @@ from .schema import exam_attempt_schema, exam_question_schema
 
 @exam_attempt_schema
 class ExamAttemptViewSet(ModelViewSet):
+    queryset = ExamAttempt.objects.none()
     serializer_class = ExamAttemptSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "patch"]

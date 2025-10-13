@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .models import CustomUser
+from .models import CustomUser, UserAnswers
 from .serializers import (
     UserSerializer,
     ChangePasswordSerializer,
@@ -109,6 +109,7 @@ class UserActionsViewSet(ModelViewSet):
 
 @user_answers_schema
 class UserAnswersViewSet(ModelViewSet):
+    queryset = UserAnswers.objects.none()
     serializer_class = UserAnswersSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post"]
