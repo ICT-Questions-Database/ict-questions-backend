@@ -15,8 +15,11 @@ from dotenv import load_dotenv
 from datetime import timedelta
 import os
 
-dotenv_path = Path(__file__).resolve().parent.parent.parent / ".env"
-load_dotenv(dotenv_path)
+load_dotenv()
+
+SYSTEM_NAME = "ICT-Questions"
+API_MAJOR = "v1"
+API_VERSION= "1.0"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,8 +34,11 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False")
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split()
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(" ")
 
+AUTH_USER_MODEL = "users.User"
+
+CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL")
 
 # Application definition
 
@@ -48,6 +54,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
+    "rest_frammework_simplejwt.token_blacklist"
     "drf_spectacular",
     "django_filters",
     "corsheaders",
@@ -73,8 +80,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
-CORS_ALLOW_ALL_ORIGINS = True # Pra desenvolvimento
 
 ROOT_URLCONF = "core.urls"
 
@@ -158,9 +163,6 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Para usar o usuário customizado
-AUTH_USER_MODEL = "users.CustomUser"
-
 AUTHENTICATION_BACKENDS = [
     "apps.users.authentication.EmailBackend",  # autenticação modificada no users/authentication
     "django.contrib.auth.backends.ModelBackend",
@@ -181,19 +183,14 @@ REST_FRAMEWORK = {
     ],
 }
 
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
-}
-
-
-CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL")
-
 SPECTACULAR_SETTINGS = {
     "TITLE": "ICT-Questions Database API",
-    "DESCRIPTION": "API for the ICT-Questions project",
-    "VERSION": "1.0.0",
+    "DESCRIPTION": "API REST do ICT-Questions",
+    "VERSION": API_VERSION,
+    "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,
+    },
     "CONTACT": {
         "email": CONTACT_EMAIL,
     },
@@ -205,3 +202,24 @@ SPECTACULAR_SETTINGS = {
     "CAMELIZE_NAMES": True,
 }
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": True,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "VERIFYING_KEY": None,
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "JWK_URL": None,
+    "LEEWAY": 0,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+}
+
+CORS_ALLOW_ALL_ORIGINS = True
