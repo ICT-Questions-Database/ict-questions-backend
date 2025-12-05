@@ -54,7 +54,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
-    "rest_frammework_simplejwt.token_blacklist"
+    "rest_framework_simplejwt.token_blacklist",
     "drf_spectacular",
     "django_filters",
     "corsheaders",
@@ -164,7 +164,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTHENTICATION_BACKENDS = [
-    "apps.users.authentication.EmailBackend",  # autenticação modificada no users/authentication
+    "apps.users.authentication.EmailBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 
