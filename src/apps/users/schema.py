@@ -1,9 +1,26 @@
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiExample
+
 
 user_register_schema = extend_schema_view(
     create=extend_schema(
         summary="Creates a user object",
         description="Creates a new user object.",
+        examples=[
+            OpenApiExample(
+                "Exemplo de registro válido",
+                summary="Cadastro de usuário",
+                description="Exemplo de payload para criar um novo usuário",
+                value={
+                    "username": "joao.silva",
+                    "password": "senha123",
+                    "firstName": "João",
+                    "lastName": "Silva",
+                    "email": "joao.silva@example.com",
+                },
+                request_only=True,
+                response_only=False,
+            ),
+        ],
     ),
 )
 
