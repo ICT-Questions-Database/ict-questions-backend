@@ -2,7 +2,7 @@ from django.utils import timezone
 from typing import Optional
 from django.db.models import QuerySet
 from .models import QuestionSubmission, CorrectSubmissionAnswersSources, AlternativeSubmission
-from apps.users.models import CustomUser
+from apps.users.models import User
 
 
 def review_submission(
@@ -31,7 +31,7 @@ def review_submission(
 
 
 def get_sources_for_user(
-    user: CustomUser, question_submission_id: Optional[int] = None
+    user: User, question_submission_id: Optional[int] = None
 ) -> QuerySet[CorrectSubmissionAnswersSources]:
     """
     Retorna as fontes de respostas de submissões para o usuário.
@@ -52,7 +52,7 @@ def get_sources_for_user(
 
 
 def get_alternatives_for_questions_by_user(
-    user: CustomUser, question_submission_id: Optional[int] = None
+    user: User, question_submission_id: Optional[int] = None
 ) -> QuerySet[AlternativeSubmission]:
     """
     Retorna as alternativas das questões para o usuário
