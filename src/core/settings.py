@@ -174,6 +174,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "EXCEPTION_HANDLER": "utils.custom_exception_handler.custom_exception_handler",
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
@@ -189,12 +190,6 @@ SPECTACULAR_SETTINGS = {
     "CONTACT": {
         "email": CONTACT_EMAIL,
     },
-
-    "POSTPROCESSING_HOOKS": [
-        "drf_spectacular.hooks.postprocess_schema_enums",
-        "drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields",
-    ],
-    "CAMELIZE_NAMES": True,
 }
 
 SIMPLE_JWT = {

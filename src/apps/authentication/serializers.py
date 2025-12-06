@@ -5,6 +5,7 @@ from rest_framework.serializers import (
     CharField,
     ValidationError,
 )
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from apps.users.models import User
 from utils.validators import validate_unique_email
@@ -62,3 +63,11 @@ class UserLoginSerializer(Serializer):
 
 class UserLogoutSerializer(Serializer):
     refresh_token = CharField(required=True)
+
+    def validate_refresh_token(self, value):
+        try:
+            RefreshToken(value)
+        except Exception:
+            raise ValidationError("Token inválido.")
+
+        return value

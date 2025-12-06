@@ -1,10 +1,9 @@
 from rest_framework.generics import CreateAPIView, GenericAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
-from utils.errors import GenericError
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserLogoutSerializer
 from .schemas import register_schema, login_schema, logout_schema
 from apps.users.serializers import UserSerializer
@@ -43,13 +42,6 @@ class LoginView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
 
         user = serializer.validated_data["user"]
-
-        if not user.is_active:
-            return GenericError(
-                detail="Conta não está ativa.",
-                code="invalid",
-                status_code=400
-            )
         
         refresh = RefreshToken.for_user(user)
 
@@ -68,24 +60,19 @@ class LoginView(GenericAPIView):
 
 @logout_schema
 class LogoutView(GenericAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = UserLogoutSerializer
 
     def post(self, request, *args, **kwargs):
-        try:
-            refresh_token = request.data.get("refresh_token")
-            if not refresh_token:
-                return GenericError(
-                    detail="Refresh Token é obrigatório.",
-                    code="invalid"
-                )
-            
-            token = RefreshToken(refresh_token)
-            token.blacklist()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-            return Response({"message": "Logout realizado com sucesso."}, status=200)
-        except Exception:
-            return GenericError(
-                detail="Token inválido.",
-                code="invalid"
-            )
+        refresh_token = serializer.validated_data["refresh_token"]
+
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+
+        return Response(
+            {"message": "Logout realizado com sucesso."},
+            status=200
+        )
