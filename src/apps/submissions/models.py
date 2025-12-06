@@ -7,29 +7,14 @@ from django.db.models import (
     BooleanField,
     FloatField,
     DateTimeField,
-    TextChoices,
     SET_NULL,
     CASCADE
 )
 from django.conf import settings
+from utils.enums import Track, Level, Status
 
 
 class QuestionSubmission(Model):
-    class Track(TextChoices):
-        CLOUD = "cloud", "Cloud"
-        NETWORK = "network", "Network"
-        COMPUTING = "computing", "Computing"
-
-    class Level(TextChoices):
-        HCIA = "hcia", "HCIA"
-        HCIP = "hcip", "HCIP"
-        HCIE = "hcie", "HCIE"
-
-    class Status(TextChoices):
-        PENDING = "pending", "Pending"
-        APPROVED = "approved", "Approved"
-        REJECTED = "rejected", "Rejected"
-
     submitted_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, related_name="submitted_questions")
     reviewed_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, blank=True, null=True, related_name="reviewed_questions")
     text = TextField()
