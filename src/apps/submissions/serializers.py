@@ -6,7 +6,15 @@ from .models import (
 )
 
 
+class AlternativeSubmissionSerializer(ModelSerializer):
+    class Meta:
+        model = AlternativeSubmission
+        fields = "__all__"
+
+
 class QuestionSubmissionSerializer(ModelSerializer):
+    alternatives = AlternativeSubmissionSerializer(many=True, read_only=True)
+
     class Meta:
         model = QuestionSubmission
         fields = [
@@ -23,22 +31,19 @@ class QuestionSubmissionSerializer(ModelSerializer):
             "has_multiple_answers",
             "sent_at",
             "reviewed_at",
+            "alternatives",
         ]
         read_only_fields = [
+            "id",
             "submitted_by",
             "reviewed_by",
             "sent_at",
             "reviewed_at",
+            "alternatives",
         ]
 
 
 class CorrectSubmissionAnswersSourcesSerializer(ModelSerializer):
     class Meta:
         model = CorrectSubmissionAnswersSources
-        fields = "__all__"
-
-
-class AlternativeSubmissionSerializer(ModelSerializer):
-    class Meta:
-        model = AlternativeSubmission
         fields = "__all__"

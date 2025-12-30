@@ -1,8 +1,12 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
-from .models import QuestionSubmission
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from .models import (
+    QuestionSubmission,
+    CorrectSubmissionAnswersSources,
+    AlternativeSubmission,
+)
 from .serializers import (
     QuestionSubmissionSerializer,
     CorrectSubmissionAnswersSourcesSerializer,
@@ -27,6 +31,7 @@ from utils.pagination import StandardResultsSetPagination
 
 @question_submissions_schema
 class QuestionSubmissionViewset(ModelViewSet):
+    queryset = QuestionSubmission.objects.all().order_by("-id")
     serializer_class = QuestionSubmissionSerializer
     permission_classes = [IsAuthenticated, QuestionSubmissionPermission]
     pagination_class = StandardResultsSetPagination
@@ -34,25 +39,33 @@ class QuestionSubmissionViewset(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+
         if user.is_staff:
-            return QuestionSubmission.objects.all().order_by("id")
-        return QuestionSubmission.objects.filter(submitted_by=user).order_by("id")
+            queryset = QuestionSubmission.objects.all()
+        else:
+            queryset = QuestionSubmission.objects.filter(submitted_by=user)
+
+        queryset = queryset.prefetch_related("alternatives")
+
+        return queryset.order_by("-id")
 
     def perform_create(self, serializer):
         serializer.save(submitted_by=self.request.user)
 
-    @action(detail=True, methods=["patch"])
+    @action(
+        detail=True,
+        methods=["patch"],
+        permission_classes=[IsAuthenticated, IsAdminUser],
+    )
     def review(self, request, pk=None):
         submission = self.get_object()
-        status = request.data.get("status")
-        feedback = request.data.get("feedback", None)
 
-        try:
-            submission = review_submission(submission, request.user, status, feedback)
-        except PermissionError as e:
-            return Response({"detail": str(e)}, status=403)
-        except ValueError as e:
-            return Response({"detail": str(e)}, status=400)
+        submission = review_submission(
+            submission=submission,
+            reviewer=request.user,
+            status=request.data.get("status"),
+            feedback=request.data.get("feedback"),
+        )
 
         serializer = self.get_serializer(submission)
         return Response(serializer.data)
@@ -60,6 +73,7 @@ class QuestionSubmissionViewset(ModelViewSet):
 
 @correct_submissions_answers_sources_schema
 class CorrectSubmissionAnswersSourcesViewSet(ModelViewSet):
+    queryset = CorrectSubmissionAnswersSources.objects.all().order_by("-id")
     serializer_class = CorrectSubmissionAnswersSourcesSerializer
     permission_classes = [IsAuthenticated, BaseSubmissionPermission]
     pagination_class = StandardResultsSetPagination
@@ -74,6 +88,7 @@ class CorrectSubmissionAnswersSourcesViewSet(ModelViewSet):
 
 @alternative_submissions_schema
 class AlternativeSubmissionViewSet(ModelViewSet):
+    queryset = AlternativeSubmission.objects.all().order_by("-id")
     serializer_class = AlternativeSubmissionSerializer
     permission_classes = [IsAuthenticated, BaseSubmissionPermission]
     pagination_class = StandardResultsSetPagination

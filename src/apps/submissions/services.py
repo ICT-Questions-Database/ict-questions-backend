@@ -1,6 +1,7 @@
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from django.utils import timezone
-from typing import Optional
 from django.db.models import QuerySet
+from typing import Optional
 from .models import QuestionSubmission, CorrectSubmissionAnswersSources, AlternativeSubmission
 from apps.users.models import User
 
@@ -15,10 +16,16 @@ def review_submission(
     - Atualiza feedback
     """
     if not reviewer.is_staff:
-        raise PermissionError("Only admins can review submissions.")
+        raise PermissionDenied(
+            detail="Apenas admins podem avaliar submissões.",
+            code="not_authorized",
+        )
 
     if status not in QuestionSubmission.Status.values:
-        raise ValueError(f"Invalid status: {status}")
+        raise ValidationError(
+            detail="Status inválido.",
+            code="invalid",
+        )
 
     submission.reviewed_by = reviewer
     submission.reviewed_at = timezone.now()
