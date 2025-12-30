@@ -32,10 +32,13 @@ class UserPatchSerializer(ModelSerializer):
         fields = [
             "id",
             "name",
+            "email",
         ]
+        read_only_fields = ["id", "email"]
 
 
 class UserAnswersSerializer(ModelSerializer):
     class Meta:
         model = UserAnswers
         fields = "__all__"
+
