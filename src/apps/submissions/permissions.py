@@ -1,4 +1,4 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission
 
 class QuestionSubmissionPermission(BasePermission):
     """
@@ -7,13 +7,7 @@ class QuestionSubmissionPermission(BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        if request.user.is_staff:
-            return True
-        
-        if request.method in SAFE_METHODS:
-            return obj.submitted_by == request.user
-        
-        return obj.submitted_by == request.user
+        return request.user.is_staff or obj.submitted_by == request.user
 
 
 class BaseSubmissionPermission(BasePermission):
