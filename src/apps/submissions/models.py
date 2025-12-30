@@ -22,7 +22,7 @@ class QuestionSubmission(Model):
     level = CharField(max_length=4, choices=Level.choices)
     status = CharField(choices=Status.choices)
     weight = FloatField()
-    feedback = TextField()
+    feedback = TextField(blank=True, null=True)
     has_answer = BooleanField(default=False)
     has_multiple_answers = BooleanField(default=False)
 
@@ -34,7 +34,7 @@ class QuestionSubmission(Model):
 
 
 class AlternativeSubmission(Model):
-    question_submission = ForeignKey(QuestionSubmission, on_delete=CASCADE)
+    question_submission = ForeignKey(QuestionSubmission, on_delete=CASCADE, related_name="alternatives")
     text = TextField()
     is_correct = BooleanField()
 
