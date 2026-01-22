@@ -1,8 +1,9 @@
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from django.utils import timezone
-from typing import Optional
 from django.db.models import QuerySet
+from typing import Optional
 from .models import QuestionSubmission, CorrectSubmissionAnswersSources, AlternativeSubmission
-from apps.users.models import CustomUser
+from apps.users.models import User
 
 
 def review_submission(
@@ -15,10 +16,16 @@ def review_submission(
     - Atualiza feedback
     """
     if not reviewer.is_staff:
-        raise PermissionError("Only admins can review submissions.")
+        raise PermissionDenied(
+            detail="Apenas admins podem avaliar submissões.",
+            code="not_authorized",
+        )
 
     if status not in QuestionSubmission.Status.values:
-        raise ValueError(f"Invalid status: {status}")
+        raise ValidationError(
+            detail="Status inválido.",
+            code="invalid",
+        )
 
     submission.reviewed_by = reviewer
     submission.reviewed_at = timezone.now()
@@ -31,7 +38,7 @@ def review_submission(
 
 
 def get_sources_for_user(
-    user: CustomUser, question_submission_id: Optional[int] = None
+    user: User, question_submission_id: Optional[int] = None
 ) -> QuerySet[CorrectSubmissionAnswersSources]:
     """
     Retorna as fontes de respostas de submissões para o usuário.
@@ -52,7 +59,7 @@ def get_sources_for_user(
 
 
 def get_alternatives_for_questions_by_user(
-    user: CustomUser, question_submission_id: Optional[int] = None
+    user: User, question_submission_id: Optional[int] = None
 ) -> QuerySet[AlternativeSubmission]:
     """
     Retorna as alternativas das questões para o usuário

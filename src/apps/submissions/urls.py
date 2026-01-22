@@ -1,70 +1,28 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
 from .views import (
     QuestionSubmissionViewset,
     CorrectSubmissionAnswersSourcesViewSet,
     AlternativeSubmissionViewSet,
 )
 
-urlpatterns = [
-    path(
-        "question_submissions/",
-        QuestionSubmissionViewset.as_view({"get": "list", "post": "create"}),
-    ),
-    path(
-        "question_submissions/<int:pk>/",
-        QuestionSubmissionViewset.as_view(
-            {
-                "get": "retrieve",
-                "put": "update",
-                "patch": "partial_update",
-                "delete": "destroy",
-            }
-        ),
-    ),
-    path(
-        "question_submissions/review/<int:pk>/",
-        QuestionSubmissionViewset.as_view(
-            {
-                "patch": "review",
-            }
-        ),
-    ),
-    path(
-        "correct_submission_answers_sources/",
-        CorrectSubmissionAnswersSourcesViewSet.as_view(
-            {
-                "get": "list",
-                "post": "create",
-            }
-        ),
-    ),
-    path(
-        "correct_submission_answers_sources/<int:pk>/",
-        CorrectSubmissionAnswersSourcesViewSet.as_view(
-            {
-                "put": "update",
-                "delete": "destroy",
-            }
-        ),
-    ),
-    path(
-        "alternative_submissions/",
-        AlternativeSubmissionViewSet.as_view(
-            {
-                "get": "list",
-                "post": "create",
-            }
-        ),
-    ),
-    path(
-        "alternative_submissions/<int:pk>/",
-        AlternativeSubmissionViewSet.as_view(
-            {
-                "get": "retrieve",
-                "put": "update",
-                "patch": "partial_update",
-                "delete": "destroy",
-            }
-        ),
-    ),
-]
+router = DefaultRouter()
+
+router.register(
+    r"question-submissions",
+    QuestionSubmissionViewset,
+    basename="question-submission"
+)
+
+router.register(
+    r"correct-submission-answer-sources",
+    CorrectSubmissionAnswersSourcesViewSet,
+    basename="correct-submission-answer-sources"
+)
+
+router.register(
+    r"alternative-submissions",
+    AlternativeSubmissionViewSet,
+    basename="alternative-submission"
+)
+
+urlpatterns = router.urls
