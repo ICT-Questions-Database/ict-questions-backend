@@ -33,7 +33,7 @@ from utils.pagination import StandardResultsSetPagination
 class QuestionSubmissionViewset(ModelViewSet):
     queryset = QuestionSubmission.objects.all().order_by("-id")
     serializer_class = QuestionSubmissionSerializer
-    permission_classes = [IsAuthenticated, QuestionSubmissionPermission]
+    # permission_classes = [IsAuthenticated, QuestionSubmissionPermission]
     pagination_class = StandardResultsSetPagination
     http_method_names = ["get", "post", "put", "patch", "delete"]
 
@@ -75,7 +75,7 @@ class QuestionSubmissionViewset(ModelViewSet):
 class CorrectSubmissionAnswersSourcesViewSet(ModelViewSet):
     queryset = CorrectSubmissionAnswersSources.objects.all().order_by("-id")
     serializer_class = CorrectSubmissionAnswersSourcesSerializer
-    permission_classes = [IsAuthenticated, BaseSubmissionPermission]
+    # permission_classes = [IsAuthenticated, BaseSubmissionPermission]
     pagination_class = StandardResultsSetPagination
     http_method_names = ["get", "post", "put", "delete"]
 
@@ -90,7 +90,7 @@ class CorrectSubmissionAnswersSourcesViewSet(ModelViewSet):
 class AlternativeSubmissionViewSet(ModelViewSet):
     queryset = AlternativeSubmission.objects.all().order_by("-id")
     serializer_class = AlternativeSubmissionSerializer
-    permission_classes = [IsAuthenticated, BaseSubmissionPermission]
+    # permission_classes = [IsAuthenticated, BaseSubmissionPermission]
     pagination_class = StandardResultsSetPagination
     http_method_names = ["get", "post", "put", "patch", "delete"]
 

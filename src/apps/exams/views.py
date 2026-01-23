@@ -12,7 +12,7 @@ from .schema import exam_attempt_schema, exam_question_schema
 class ExamAttemptViewSet(ModelViewSet):
     queryset = ExamAttempt.objects.none()
     serializer_class = ExamAttemptSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "patch"]
 
     def get_queryset(self):
@@ -47,5 +47,5 @@ class ExamAttemptViewSet(ModelViewSet):
 class ExamQuestionViewSet(ModelViewSet):
     queryset = ExamQuestion.objects.all()
     serializer_class = ExamQuestionSerializer
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
     http_method_names = ["get", "post"]

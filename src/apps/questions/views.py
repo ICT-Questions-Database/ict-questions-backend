@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 class QuestionViewSet(ModelViewSet):
     queryset = Question.objects.all().order_by("id")
     serializer_class = QuestionSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    # permission_classes = [IsAdminOrReadOnly]
     pagination_class = QuestionsPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = QuestionFilter
@@ -28,7 +28,7 @@ class QuestionViewSet(ModelViewSet):
 @alternative_schema
 class AlternativeViewSet(ModelViewSet):
     serializer_class = AlternativeSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     http_method_names = ["post", "put", "delete", "patch"]
  
     queryset = Alternative.objects.all()
@@ -41,7 +41,7 @@ class AlternativeViewSet(ModelViewSet):
 @correct_answers_sources_schema
 class CorrectAnswersSourcesViewSet(ModelViewSet):
     serializer_class = CorrectAnswersSourcesSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "put", "delete", "patch"]
 
     def get_queryset(self):
