@@ -22,7 +22,10 @@ class QuestionViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete", "patch"]
 
     def perform_create(self, serializer):
-        serializer.save(reviewed_by=self.request.user)
+        user = self.request.user
+        serializer.save(
+            reviewed_by=user if user.is_authenticated else None
+        )
 
 
 @alternative_schema

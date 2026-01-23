@@ -26,8 +26,8 @@ class Question(Model):
         NETWORK = "Network"
         COMPUTING = "Computing"
 
-    submitted_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, related_name="user")
-    reviewed_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, related_name="reviewer")
+    submitted_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, blank=True, related_name="user")
+    reviewed_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, blank=True, related_name="reviewer")
 
     text = TextField()
     level = CharField(max_length=4, choices=Level.choices)
