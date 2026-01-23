@@ -36,9 +36,9 @@ class AlternativeViewSet(ModelViewSet):
  
     queryset = Alternative.objects.all()
  
-    def get_permissions(self):
-        permission_classes = [IsAuthenticated, IsAdminUser] if self.action in ("create", "destroy", "update", "partial_update") else [IsAuthenticated]
-        return [permission() for permission in permission_classes]
+    # def get_permissions(self):
+    #     permission_classes = [IsAuthenticated, IsAdminUser] if self.action in ("create", "destroy", "update", "partial_update") else [IsAuthenticated]
+    #     return [permission() for permission in permission_classes]
 
 
 @correct_answers_sources_schema
