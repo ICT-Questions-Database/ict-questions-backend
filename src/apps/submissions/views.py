@@ -49,8 +49,8 @@ class QuestionSubmissionViewset(ModelViewSet):
 
         return queryset.order_by("-id")
 
-    def perform_create(self, serializer):
-        serializer.save(submitted_by=self.request.user)
+    # def perform_create(self, serializer):
+    #     serializer.save(submitted_by=self.request.user)
 
     @action(
         detail=True,
