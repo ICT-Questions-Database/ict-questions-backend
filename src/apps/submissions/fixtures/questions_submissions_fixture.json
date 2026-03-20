@@ -1,0 +1,182 @@
+[
+  {
+    "model": "submissions.QuestionSubmission",
+    "pk": 1,
+    "fields": {
+      "submitted_by": 1,
+      "reviewed_by": 1,
+      "text": "Quais são os três principais serviços de computação em nuvem da AWS?",
+      "track": "cloud",
+      "level": "hcia",
+      "status": "approved",
+      "weight": 1.5,
+      "feedback": 4.7,
+      "has_answer": true,
+      "has_multiple_answers": false,
+      "sent_at": "2024-01-15T10:30:00Z",
+      "reviewed_at": "2024-01-16T14:20:00Z"
+    }
+  },
+  {
+    "model": "submissions.QuestionSubmission",
+    "pk": 2,
+    "fields": {
+      "submitted_by": 1,
+      "reviewed_by": 1,
+      "text": "Explique o conceito de VPC (Virtual Private Cloud) na AWS.",
+      "track": "cloud",
+      "level": "hcip",
+      "status": "approved",
+      "weight": 2.0,
+      "feedback": 4.8,
+      "has_answer": true,
+      "has_multiple_answers": false,
+      "sent_at": "2024-01-14T09:15:00Z",
+      "reviewed_at": "2024-01-15T11:45:00Z"
+    }
+  },
+  {
+    "model": "submissions.QuestionSubmission",
+    "pk": 3,
+    "fields": {
+      "submitted_by": 1,
+      "reviewed_by": 1,
+      "text": "Como funcionam os grupos de segurança na AWS?",
+      "track": "cloud",
+      "level": "hcie",
+      "status": "rejected",
+      "weight": 2.5,
+      "feedback": 3.2,
+      "has_answer": false,
+      "has_multiple_answers": true,
+      "sent_at": "2024-01-13T16:45:00Z",
+      "reviewed_at": "2024-01-14T10:30:00Z"
+    }
+  },
+  {
+    "model": "submissions.QuestionSubmission",
+    "pk": 4,
+    "fields": {
+      "submitted_by": 1,
+      "reviewed_by": 1,
+      "text": "Descreva os protocolos de roteamento OSPF e BGP.",
+      "track": "network",
+      "level": "hcia",
+      "status": "approved",
+      "weight": 1.8,
+      "feedback": 4.6,
+      "has_answer": true,
+      "has_multiple_answers": false,
+      "sent_at": "2024-01-12T13:20:00Z",
+      "reviewed_at": "2024-01-13T15:10:00Z"
+    }
+  },
+  {
+    "model": "submissions.QuestionSubmission",
+    "pk": 5,
+    "fields": {
+      "submitted_by": 1,
+      "reviewed_by": 1,
+      "text": "O que é VLAN e como funciona o trunking?",
+      "track": "network",
+      "level": "hcip",
+      "status": "pending",
+      "weight": 2.2,
+      "feedback": 0.0,
+      "has_answer": true,
+      "has_multiple_answers": true,
+      "sent_at": "2024-01-11T11:00:00Z",
+      "reviewed_at": null
+    }
+  },
+  {
+    "model": "submissions.QuestionSubmission",
+    "pk": 6,
+    "fields": {
+      "submitted_by": 1,
+      "reviewed_by": 1,
+      "text": "Explique a diferença entre TCP e UDP.",
+      "track": "network",
+      "level": "hcie",
+      "status": "approved",
+      "weight": 1.7,
+      "feedback": 4.9,
+      "has_answer": true,
+      "has_multiple_answers": false,
+      "sent_at": "2024-01-10T08:30:00Z",
+      "reviewed_at": "2024-01-11T09:45:00Z"
+    }
+  },
+  {
+    "model": "submissions.QuestionSubmission",
+    "pk": 7,
+    "fields": {
+      "submitted_by": 1,
+      "reviewed_by": 1,
+      "text": "Quais são os tipos de virtualização disponíveis?",
+      "track": "computing",
+      "level": "hcia",
+      "status": "approved",
+      "weight": 1.9,
+      "feedback": 4.3,
+      "has_answer": true,
+      "has_multiple_answers": false,
+      "sent_at": "2024-01-09T14:15:00Z",
+      "reviewed_at": "2024-01-10T16:20:00Z"
+    }
+  },
+  {
+    "model": "submissions.QuestionSubmission",
+    "pk": 8,
+    "fields": {
+      "submitted_by": 1,
+      "reviewed_by": 1,
+      "text": "Descreva a arquitetura de um hypervisor tipo 1.",
+      "track": "computing",
+      "level": "hcip",
+      "status": "rejected",
+      "weight": 2.3,
+      "feedback": 3.5,
+      "has_answer": false,
+      "has_multiple_answers": true,
+      "sent_at": "2024-01-08T10:45:00Z",
+      "reviewed_at": "2024-01-09T12:30:00Z"
+    }
+  },
+  {
+    "model": "submissions.QuestionSubmission",
+    "pk": 9,
+    "fields": {
+      "submitted_by": 1,
+      "reviewed_by": 1,
+      "text": "Como funciona a alocação de recursos em containers Docker?",
+      "track": "computing",
+      "level": "hcie",
+      "status": "approved",
+      "weight": 2.1,
+      "feedback": 4.7,
+      "has_answer": true,
+      "has_multiple_answers": false,
+      "sent_at": "2024-01-07T15:30:00Z",
+      "reviewed_at": "2024-01-08T17:15:00Z"
+    }
+  },
+  {
+    "model": "submissions.QuestionSubmission",
+    "pk": 10,
+    "fields": {
+      "submitted_by": 1,
+      "reviewed_by": 1,
+      "text": "Quais são as melhores práticas para segurança em APIs REST?",
+      "track": "cloud",
+      "level": "hcip",
+      "status": "pending",
+      "weight": 2.4,
+      "feedback": 0.0,
+      "has_answer": true,
+      "has_multiple_answers": true,
+      "sent_at": "2024-01-06T12:00:00Z",
+      "reviewed_at": null
+    }
+  }
+]
